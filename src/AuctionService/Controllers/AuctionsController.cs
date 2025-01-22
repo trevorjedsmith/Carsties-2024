@@ -43,13 +43,13 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper,
         return mapper.Map<AuctionDto>(auction);
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPost]
     public async Task<ActionResult<AuctionDto>> CreateAuction(CreateAuctionDto createAuctionDto)
     {
         var auction = mapper.Map<Auction>(createAuctionDto);
 
-        auction.Seller = User.Identity?.Name ?? "Unknown user";
+        auction.Seller = User.Identity?.Name ?? "Bob";
 
         context.Auctions.Add(auction);
 
@@ -65,7 +65,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper,
             new { Id = auction.Id }, mapper.Map<AuctionDto>(auction));
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateAuction(Guid id, UpdateAuctionDto updateAuctionDto)
     {
@@ -74,7 +74,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper,
 
         if (auction == null) return NotFound();
 
-        if (auction.Seller != User.Identity?.Name) return Forbid();
+        //if (auction.Seller != "Bob") return Forbid();
 
         auction.Item.Make = updateAuctionDto.Make ?? auction.Item.Make;
         auction.Item.Model = updateAuctionDto.Model ?? auction.Item.Model;
@@ -91,7 +91,7 @@ public class AuctionsController(AuctionDbContext context, IMapper mapper,
         return BadRequest("Problem saving changes");
     }
 
-    [Authorize]
+    //[Authorize]
     [HttpDelete("{id}")]
     public async Task<ActionResult> DeleteAuction(Guid id)
     {
